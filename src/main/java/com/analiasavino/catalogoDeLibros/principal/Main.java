@@ -1,5 +1,6 @@
 package com.analiasavino.catalogoDeLibros.principal;
 
+//import com.analiasavino.catalogoDeLibros.model.Datos;
 import com.analiasavino.catalogoDeLibros.model.Datos;
 import com.analiasavino.catalogoDeLibros.model.DatosLibros;
 import com.analiasavino.catalogoDeLibros.model.Libro;
@@ -20,7 +21,7 @@ public class Main {
   private ConsumoApi consumoApi = new ConsumoApi();
   private ConvierteDatos conversor = new ConvierteDatos();
   private Scanner teclado = new Scanner(System.in);
-  private List<Datos> datosLibros =new ArrayList<>();
+  //private List<Datos> datosLibros =new ArrayList<>();
 
 
   //metodo que me permite mostrar el menu
@@ -52,7 +53,7 @@ public class Main {
           buscarLibroPorAutor();
           break;
         case 3:
-          listarLibrosBuscados();
+          //listarLibrosBuscados();
           break;
         case 4:
           System.out.println("caso4");
@@ -74,7 +75,6 @@ public class Main {
 
   //Metodos
 
-
       private Datos buscarLibro() {
         System.out.println("Por favor ingrese el nombre del libro que desee buscar");
         var tituloLibro = teclado.nextLine();
@@ -85,8 +85,8 @@ public class Main {
               .findFirst();
 
         if (libroBuscado.isPresent()) {
-          System.out.println("Libro Encontrado: ");
           System.out.println(libroBuscado.get());
+
 
         } else {
           System.out.println("Libro no encontrado");
@@ -98,9 +98,6 @@ public class Main {
   }
 
   private void listarLibrosBuscados() {
-    Datos datos = buscarLibro();
-    datosLibros.add(datos);
-    System.out.println(datos);
 
   }
 }

@@ -7,5 +7,5 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public record Datos(
       @JsonAlias("results") List <DatosLibros> resultados
-      ) {
+) {
 }

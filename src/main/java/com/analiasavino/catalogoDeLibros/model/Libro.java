@@ -1,14 +1,27 @@
 package com.analiasavino.catalogoDeLibros.model;
 
+import jakarta.persistence.*;
+
 import java.util.List;
 
-
+@Entity
+@Table(name = "libros")
 public class Libro {
   //declaro las variables.
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long Id;
+  @Column(unique = true)
   private String titulo;
+  @ManyToOne
   private List<DatosAutor> autor;
   private List<String> idiomas;
   private Integer numeroDeDescargas;
+
+
+
+  //Constructor predeterminado.
+  public Libro(){}
 
   //constructor
 
@@ -19,7 +32,18 @@ public class Libro {
     this.numeroDeDescargas = datosLibros.numeroDeDescargas();
 
 }
+
+
 //metodos getter and setters.
+
+
+  public Long getId() {
+    return Id;
+  }
+
+  public void setId(Long id) {
+    Id = id;
+  }
 
   public String getTitulo() {
     return titulo;

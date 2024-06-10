@@ -12,5 +12,14 @@ public record DatosLibros (
       @JsonAlias("languages") List<String> idiomas,
       @JsonAlias("download_count") Integer numeroDeDescargas
 ) {
+  @Override
+  public String toString() {
+    return "\n Datos del libro solicitado:" + "\n" +
+            "Titulo: '" + titulo + '\'' + "\n" +
+            "Autor: " + autor + "\n" +
+            "Idiomas disponibles: " + idiomas + "\n"+
+            "NumeroDeDescargas: " + numeroDeDescargas +"\n"+
+            "**************************************************************************************\n";
 
+  }
 }

@@ -4,13 +4,12 @@ package com.analiasavino.catalogoDeLibros.principal;
 import com.analiasavino.catalogoDeLibros.model.Datos;
 import com.analiasavino.catalogoDeLibros.model.DatosLibros;
 import com.analiasavino.catalogoDeLibros.model.Libro;
+import com.analiasavino.catalogoDeLibros.repository.LibroRepository;
 import com.analiasavino.catalogoDeLibros.services.ConsumoApi;
 import com.analiasavino.catalogoDeLibros.services.ConvierteDatos;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -21,8 +20,13 @@ public class Main {
   private ConsumoApi consumoApi = new ConsumoApi();
   private ConvierteDatos conversor = new ConvierteDatos();
   private Scanner teclado = new Scanner(System.in);
-  //private List<Datos> datosLibros =new ArrayList<>();
+  private List<Datos> datosLibros =new ArrayList<>();
+  @Autowired
+  private LibroRepository repository;
 
+  public Main(LibroRepository repository) {
+    this.repository = repository;
+  }
 
   //metodo que me permite mostrar el menu
 
@@ -32,6 +36,7 @@ public class Main {
       //declaro la variable menuPcipal que tiene scope solo dentro del while
 
       var menuPrincipal = """
+            \n
             1 - Buscar libros por tíulo.
             2 - Buscar libros por autor.
             3 - Lista de libros guardados.
@@ -53,7 +58,7 @@ public class Main {
           buscarLibroPorAutor();
           break;
         case 3:
-          //listarLibrosBuscados();
+          listarLibrosBuscados();
           break;
         case 4:
           System.out.println("caso4");
@@ -86,7 +91,8 @@ public class Main {
 
         if (libroBuscado.isPresent()) {
           System.out.println(libroBuscado.get());
-
+          Libro libro = new Libro(libroBuscado.get());
+          repository.save(libro);
 
         } else {
           System.out.println("Libro no encontrado");
@@ -94,10 +100,17 @@ public class Main {
 
         return datosBusqueda;
       }
+
   private void buscarLibroPorAutor() {
   }
 
   private void listarLibrosBuscados() {
+    List<Libro> libros = repository.findAll();
+    System.out.println("La lista de libros guardados hasta ahora es la siguiente: ");
+
+    libros.stream()
+          .sorted(Comparator.comparing(Libro::getId))
+          .forEach(System.out::println);
 
   }
 }

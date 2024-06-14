@@ -55,7 +55,7 @@ public class Main {
           buscarLibro();
           break;
         case 2:
-          buscarLibroPorAutor();
+          //buscarLibroPorAutor();
           break;
         case 3:
           listarLibrosBuscados();
@@ -90,6 +90,7 @@ public class Main {
               .findFirst();
 
         if (libroBuscado.isPresent()) {
+          System.out.println(datosBusqueda);
           System.out.println(libroBuscado.get());
           Libro libro = new Libro(libroBuscado.get());
           repository.save(libro);
@@ -101,8 +102,26 @@ public class Main {
         return datosBusqueda;
       }
 
-  private void buscarLibroPorAutor() {
-  }
+ /* private void buscarLibroPorAutor() {
+    System.out.println("Por favor ingrese el nombre del autor que desee buscar");
+    var autorBuscado= teclado.nextLine();
+    var json = consumoApi.obtenerDatos(URL_BASE + "?search=" + ));
+    var datosBusquedaXAutor = conversor.obtenerDatos(json, Datos.class);
+    Optional<DatosLibros> libroBuscado = datosBusquedaXAutor.resultados().stream()
+          .filter(l -> l.titulo().toUpperCase().contains(tituloLibro.toUpperCase()))
+          .findFirst();
+
+    if (libroBuscado.isPresent()) {
+      System.out.println(libroBuscado.get());
+      Libro libro = new Libro(libroBuscado.get());
+      repository.save(libro);
+
+    } else {
+      System.out.println("Libro no encontrado");
+    }
+
+    return datosBusqueda;
+  }*/
 
   private void listarLibrosBuscados() {
     List<Libro> libros = repository.findAll();

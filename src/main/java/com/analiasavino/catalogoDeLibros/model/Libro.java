@@ -12,8 +12,8 @@ public class Libro {
   private Long Id;
   @Column(unique = true)
   private String titulo;
-  @ManyToOne()
-  @JoinColumn(name ="autor_id")
+  @ManyToOne(cascade = CascadeType.PERSIST)
+  @JoinColumn(name = "autor_id")
   private Autor autor;
   private List<String> idiomas;
   private Integer numeroDeDescargas;
@@ -25,6 +25,7 @@ public class Libro {
 
   public Libro(DatosLibros datosLibros){
     this.titulo = datosLibros.titulo();
+    this.autor = new Autor();
     this.idiomas = datosLibros.idiomas();
     this.numeroDeDescargas = datosLibros.numeroDeDescargas();
 
@@ -32,7 +33,6 @@ public class Libro {
 
   public Libro(List<Datos> datosLibros) {
   }
-
 
 //metodos getter and setters.
 

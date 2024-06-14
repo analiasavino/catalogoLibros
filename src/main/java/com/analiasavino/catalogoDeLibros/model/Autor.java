@@ -1,8 +1,6 @@
 package com.analiasavino.catalogoDeLibros.model;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
@@ -21,8 +19,8 @@ public class Autor {
 
   //constructor predeterminado es requisito para las bases de datos
   public Autor(){}
-  //constructor
 
+  //constructor
   public Autor(DatosAutor datosAutor) {
     this.nombre = nombre;
     this.fechaDeNacimiento = fechaDeNacimiento;
@@ -30,7 +28,6 @@ public class Autor {
   }
 
   //getters and setters
-
   public String getNombre() {
     return nombre;
   }

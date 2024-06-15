@@ -3,6 +3,7 @@ package com.analiasavino.catalogoDeLibros.model;
 import jakarta.persistence.*;
 import java.util.List;
 
+
 @Entity
 @Table(name = "libros")
 public class Libro {
@@ -15,7 +16,11 @@ public class Libro {
   @ManyToOne(cascade = CascadeType.PERSIST)
   @JoinColumn(name = "autor_id")
   private Autor autor;
-  private List<String> idiomas;
+  @ElementCollection(targetClass = Idioma.class)
+  @Enumerated(EnumType.STRING)
+  @CollectionTable(name = "libro_idiomas", joinColumns = @JoinColumn(name = "libro_id"))
+  @Column(name = "idioma")
+  private List<String> idioma;
   private Integer numeroDeDescargas;
 
   //Constructor predeterminado.
@@ -26,7 +31,7 @@ public class Libro {
   public Libro(DatosLibros datosLibros){
     this.titulo = datosLibros.titulo();
     this.autor = new Autor();
-    this.idiomas = datosLibros.idiomas();
+    this.idioma = datosLibros.idioma();
     this.numeroDeDescargas = datosLibros.numeroDeDescargas();
 
 }
@@ -35,7 +40,6 @@ public class Libro {
   }
 
 //metodos getter and setters.
-
 
   public Long getId() {
     return Id;
@@ -57,10 +61,10 @@ public class Libro {
 
  //public void setAutor(List<DatosAutor> autor) {    this.autor = autor;}
 
-  public List<String> getIdiomas() { return idiomas;  }
+  public List<String> getIdiomas() { return idioma;  }
 
   public void setIdiomas(List<String> idiomas) {
-    this.idiomas = idiomas;
+    this.idioma = idioma;
   }
 
   public Integer getNumeroDeDescargas() {
@@ -80,7 +84,7 @@ public class Libro {
            "Id: " + Id +
            ", titulo: " + titulo + '\'' +
            ", autor: " + autor +
-           ", idiomas: " + idiomas +
+           ", idiomas: " + idioma +
            ", numeroDeDescargas: " + numeroDeDescargas;
   }
 }

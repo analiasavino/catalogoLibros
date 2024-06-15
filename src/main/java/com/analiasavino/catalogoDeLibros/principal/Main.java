@@ -1,6 +1,5 @@
 package com.analiasavino.catalogoDeLibros.principal;
 
-//import com.analiasavino.catalogoDeLibros.model.Datos;
 import com.analiasavino.catalogoDeLibros.model.Datos;
 import com.analiasavino.catalogoDeLibros.model.DatosLibros;
 import com.analiasavino.catalogoDeLibros.model.Libro;
@@ -10,7 +9,9 @@ import com.analiasavino.catalogoDeLibros.services.ConvierteDatos;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Optional;
+
+import static com.analiasavino.catalogoDeLibros.model.Menu.*;
 
 public class Main {
 
@@ -23,6 +24,9 @@ public class Main {
   private List<Datos> datosLibros =new ArrayList<>();
   @Autowired
   private LibroRepository repository;
+  Libro libro = new Libro();
+  private com.analiasavino.catalogoDeLibros.model.Idioma Idioma;
+
 
   public Main(LibroRepository repository) {
     this.repository = repository;
@@ -30,22 +34,11 @@ public class Main {
 
   //metodo que me permite mostrar el menu
 
+
   public void muestraElMenu() {
     int opcion = -1;
     while (opcion != 7) {
-      //declaro la variable menuPcipal que tiene scope solo dentro del while
-
-      var menuPrincipal = """
-            \n
-            1 - Buscar libros por tíulo.
-            2 - Buscar libros por autor.
-            3 - Lista de libros guardados.
-            4-  Lista de autores registrados.
-            5 - Lista de autores vivos en determinado año.
-            6 - Lista de libros por idioma.
-            7 - Salir.
-            """;
-      System.out.println(menuPrincipal);
+      System.out.println(getMenuPrincipal());
       opcion = teclado.nextInt();
       teclado.nextLine();
 
@@ -53,6 +46,7 @@ public class Main {
       switch (opcion) {
         case 1:
           buscarLibro();
+          //salvarLibro(libro);
           break;
         case 2:
           //buscarLibroPorAutor();
@@ -61,13 +55,15 @@ public class Main {
           listarLibrosBuscados();
           break;
         case 4:
-          System.out.println("caso4");
+          System.out.println("caso 4");
           break;
         case 5:
           System.out.println("caso5");
           break;
         case 6:
-          System.out.println("caso6");
+          System.out.println("Por favor ingrese el idioma por el cual desea realizar su busqueda:");
+          System.out.println(getMenuIdiomas());
+          listarLibrosPorIdiomas();
           break;
         case 7:
           System.out.println("Saliendo del sistema");
@@ -79,28 +75,36 @@ public class Main {
   }
 
   //Metodos
+  private Libro buscarLibro() {
+    System.out.println("Por favor ingrese el nombre del libro que desee buscar:");
+      var tituloLibro = teclado.nextLine();
+      var json = consumoApi.obtenerDatos(URL_BASE + "?search=" + tituloLibro.replace(" ", "+"));
+      var datosBusqueda = conversor.obtenerDatos(json, Datos.class);
+      Optional<DatosLibros> libroBuscado = datosBusqueda.resultados().stream()
+            .filter(l -> l.titulo().toUpperCase().contains(tituloLibro.toUpperCase()))
+            .findFirst();
 
-      private Datos buscarLibro() {
-        System.out.println("Por favor ingrese el nombre del libro que desee buscar");
-        var tituloLibro = teclado.nextLine();
-        var json = consumoApi.obtenerDatos(URL_BASE + "?search=" + tituloLibro.replace(" ", "+"));
-        var datosBusqueda = conversor.obtenerDatos(json, Datos.class);
-        Optional<DatosLibros> libroBuscado = datosBusqueda.resultados().stream()
-              .filter(l -> l.titulo().toUpperCase().contains(tituloLibro.toUpperCase()))
-              .findFirst();
+      if (libroBuscado.isPresent()) {
+        System.out.println(libroBuscado.get());
 
-        if (libroBuscado.isPresent()) {
-          System.out.println(datosBusqueda);
-          System.out.println(libroBuscado.get());
-          Libro libro = new Libro(libroBuscado.get());
-          repository.save(libro);
 
-        } else {
-          System.out.println("Libro no encontrado");
-        }
-
-        return datosBusqueda;
+      } else {
+        System.out.println("Libro no encontrado");
       }
+
+      return libro;
+  }
+
+ /* public void salvarLibro(Libro libro) {
+    Optional<Libro> libroExistente = Optional.ofNullable(libro);
+    if (libroExistente.isPresent()){
+      System.out.println("\nEl libro ya esta registrado\n");
+
+    } else {
+      // Insertar el nuevo registro
+      repository.save(libro);
+    }
+  }
 
  /* private void buscarLibroPorAutor() {
     System.out.println("Por favor ingrese el nombre del autor que desee buscar");
@@ -132,6 +136,17 @@ public class Main {
           .forEach(System.out::println);
 
   }
+
+
+  private void listarLibrosPorIdiomas() {
+    System.out.println("Escriba el idioma del libro que desea buscar");
+    var idiomaIngresado = teclado.nextLine();
+    var idioma = Idioma.fromEspanol(idiomaIngresado);
+    List<Libro> librosPorIdioma= repository.findByIdioma(idioma);
+    System.out.println("Los libros en " + idiomaIngresado + "son los siguentes");
+    librosPorIdioma.forEach(System.out::println);
+  }
+
 }
 
 

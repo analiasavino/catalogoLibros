@@ -37,39 +37,25 @@ public class Libro {
 //metodos getter and setters.
 
 
-  public Long getId() {
-    return Id;
-  }
+  public Long getId() { return Id;  }
 
-  public void setId(Long id) {
-    Id = id;
-  }
+  public void setId(Long id) { Id = id;  }
 
-  public String getTitulo() {
-    return titulo;
-  }
+  public String getTitulo() { return titulo;  }
 
-  public void setTitulo(String titulo) {
-    this.titulo = titulo;
-  }
+  public void setTitulo(String titulo) { this.titulo = titulo;  }
 
-  //public List<DatosAutor> getAutor() {    return autor;}
+  //public List<DatosAutor> getAutor() { return autor;}
 
- //public void setAutor(List<DatosAutor> autor) {    this.autor = autor;}
+ //public void setAutor(List<DatosAutor> autor) { this.autor = autor;}
 
   public List<String> getIdiomas() { return idiomas;  }
 
-  public void setIdiomas(List<String> idiomas) {
-    this.idiomas = idiomas;
-  }
+  public void setIdiomas(List<String> idiomas) {this.idiomas = idiomas; }
 
-  public Integer getNumeroDeDescargas() {
-    return numeroDeDescargas;
-  }
+  public Integer getNumeroDeDescargas() {return numeroDeDescargas;  }
 
-  public void setNumeroDeDescargas(Integer numeroDeDescargas) {
-    this.numeroDeDescargas = numeroDeDescargas;
-  }
+  public void setNumeroDeDescargas(Integer numeroDeDescargas) {this.numeroDeDescargas = numeroDeDescargas;  }
 
   //metodo toString
 

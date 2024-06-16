@@ -1,6 +1,5 @@
 package com.analiasavino.catalogoDeLibros.principal;
 
-//import com.analiasavino.catalogoDeLibros.model.Datos;
 import com.analiasavino.catalogoDeLibros.model.Datos;
 import com.analiasavino.catalogoDeLibros.model.DatosLibros;
 import com.analiasavino.catalogoDeLibros.model.Libro;
@@ -10,7 +9,6 @@ import com.analiasavino.catalogoDeLibros.services.ConvierteDatos;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Main {
 
@@ -20,18 +18,18 @@ public class Main {
   private ConsumoApi consumoApi = new ConsumoApi();
   private ConvierteDatos conversor = new ConvierteDatos();
   private Scanner teclado = new Scanner(System.in);
-  private List<Datos> datosLibros =new ArrayList<>();
+  private List<Datos> datosLibros = new ArrayList<>();
   @Autowired
-  private LibroRepository repository;
+  private LibroRepository repositoryLibros;
 
-  public Main(LibroRepository repository) {
-    this.repository = repository;
+  public Main(LibroRepository repositoryLibros) {
+    this.repositoryLibros = repositoryLibros;
   }
 
   //metodo que me permite mostrar el menu
 
   public void muestraElMenu() {
-    int opcion = -1;
+    int opcion = 0;
     while (opcion != 7) {
       //declaro la variable menuPcipal que tiene scope solo dentro del while
 
@@ -53,12 +51,13 @@ public class Main {
       switch (opcion) {
         case 1:
           buscarLibro();
+          guardarLibro();
           break;
         case 2:
-          buscarLibroPorAutor();
+          // buscarLibroPorAutor();
           break;
         case 3:
-          listarLibrosBuscados();
+          //listarLibrosBuscados();
           break;
         case 4:
           System.out.println("caso4");
@@ -71,7 +70,7 @@ public class Main {
           break;
         case 7:
           System.out.println("Saliendo del sistema");
-         break;
+          break;
         default:
           System.out.println("Opción inválida.");
       }
@@ -80,32 +79,45 @@ public class Main {
 
   //Metodos
 
-      private Datos buscarLibro() {
-        System.out.println("Por favor ingrese el nombre del libro que desee buscar");
-        var tituloLibro = teclado.nextLine();
-        var json = consumoApi.obtenerDatos(URL_BASE + "?search=" + tituloLibro.replace(" ", "+"));
-        var datosBusqueda = conversor.obtenerDatos(json, Datos.class);
-        Optional<DatosLibros> libroBuscado = datosBusqueda.resultados().stream()
-              .filter(l -> l.titulo().toUpperCase().contains(tituloLibro.toUpperCase()))
-              .findFirst();
+  private Datos buscarLibro() {
+    System.out.println("Por favor ingrese el nombre del libro que desee buscar");
+    var tituloLibro = teclado.nextLine();
+    var json = consumoApi.obtenerDatos(URL_BASE + "?search=" + tituloLibro.replace(" ", "+"));
+    var datosBusqueda = conversor.obtenerDatos(json, Datos.class);
+    Optional<DatosLibros> libroBuscado = datosBusqueda.resultados().stream()
+          .filter(l -> l.titulo().toUpperCase().contains(tituloLibro.toUpperCase()))
+          .findFirst();
+    if (libroBuscado.isPresent()) {
+      System.out.println("Libro Encontrado ");
+    } else {
+      System.out.println("Libro no encontrado");
+    }
+    return datosBusqueda;
+  }
 
-        if (libroBuscado.isPresent()) {
-          System.out.println(libroBuscado.get());
-          Libro libro = new Libro(libroBuscado.get());
-          repository.save(libro);
+  private void guardarLibro() {
+    Datos datos = buscarLibro();
+    if (datos != null && !datos.resultados().isEmpty()) {
+      DatosLibros libro = datos.resultados().get(0);
 
-        } else {
-          System.out.println("Libro no encontrado");
-        }
+      Libro libroAGuardar = new Libro(libro);
+      Optional<Libro> libroExiste = repositoryLibros.findByTitulo(libroAGuardar.getTitulo());
+      if (libroExiste.isPresent()) {
+        System.out.println("El" + libroExiste + "ya se encuentra registrado en nuestra base de datos.");
+      } else {
+        repositoryLibros.save(libroAGuardar);
+        System.out.println("El libro: " + libroAGuardar + "Se guardo correctamente en la base de datos.");
 
-        return datosBusqueda;
       }
+    }
+  }
+}
 
-  private void buscarLibroPorAutor() {
+/*  private void buscarLibroPorAutor() {
   }
 
   private void listarLibrosBuscados() {
-    List<Libro> libros = repository.findAll();
+    List<Libro> libros = repositoryLibros.findAll();
     System.out.println("La lista de libros guardados hasta ahora es la siguiente: ");
 
     libros.stream()
@@ -113,6 +125,6 @@ public class Main {
           .forEach(System.out::println);
 
   }
-}
+}*/
 
 

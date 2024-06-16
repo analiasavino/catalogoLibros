@@ -11,7 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CatalogoDeLibrosApplication implements CommandLineRunner {
 
 	@Autowired
-	private LibroRepository repository;
+	private LibroRepository repositoryLibros;
+
   public CatalogoDeLibrosApplication() {
   }
 
@@ -21,7 +22,7 @@ public class CatalogoDeLibrosApplication implements CommandLineRunner {
 
   @Override
 	public void run(String ...args)throws Exception{
-		Main main = new Main(repository);
+		Main main = new Main(repositoryLibros);
 		main.muestraElMenu();
 	}
 }

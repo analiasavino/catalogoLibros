@@ -8,7 +8,10 @@ import com.analiasavino.catalogoDeLibros.services.ConsumoApi;
 import com.analiasavino.catalogoDeLibros.services.ConvierteDatos;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
 
 public class Main {
 
@@ -28,33 +31,29 @@ public class Main {
 
   //metodo que me permite mostrar el menu
 
-  public void muestraElMenu() {
-    int opcion = 0;
+  public void muestraElMenu(){
+    System.out.println("Bienvenido al catalogo de libros de Analia");
+    int opcion = -1;
     while (opcion != 7) {
-      //declaro la variable menuPcipal que tiene scope solo dentro del while
-
-      var menuPrincipal = """
+      System.out.println( """
             \n
             1 - Buscar libros por tíulo.
-            2 - Buscar libros por autor.
+            2 - Guardar libro en base de datos.
             3 - Lista de libros guardados.
             4-  Lista de autores registrados.
             5 - Lista de autores vivos en determinado año.
             6 - Lista de libros por idioma.
             7 - Salir.
-            """;
-      System.out.println(menuPrincipal);
+            """);
       opcion = teclado.nextInt();
       teclado.nextLine();
-
-      //en funcion de la opcion elejida se ejecuta el swithc
+      //en funcion de la opcion elejida se ejecuta el switch
       switch (opcion) {
         case 1:
           buscarLibro();
-          guardarLibro();
           break;
         case 2:
-          // buscarLibroPorAutor();
+          guardarLibro();
           break;
         case 3:
           //listarLibrosBuscados();
@@ -88,7 +87,7 @@ public class Main {
           .filter(l -> l.titulo().toUpperCase().contains(tituloLibro.toUpperCase()))
           .findFirst();
     if (libroBuscado.isPresent()) {
-      System.out.println("Libro Encontrado ");
+      System.out.println(libroBuscado.get());
     } else {
       System.out.println("Libro no encontrado");
     }
@@ -97,34 +96,27 @@ public class Main {
 
   private void guardarLibro() {
     Datos datos = buscarLibro();
-    if (datos != null && !datos.resultados().isEmpty()) {
-      DatosLibros libro = datos.resultados().get(0);
-
-      Libro libroAGuardar = new Libro(libro);
-      Optional<Libro> libroExiste = repositoryLibros.findByTitulo(libroAGuardar.getTitulo());
-      if (libroExiste.isPresent()) {
-        System.out.println("El" + libroExiste + "ya se encuentra registrado en nuestra base de datos.");
-      } else {
-        repositoryLibros.save(libroAGuardar);
-        System.out.println("El libro: " + libroAGuardar + "Se guardo correctamente en la base de datos.");
-
+    DatosLibros libro = datos.resultados().getFirst();
+    Libro libroAGuardar = new Libro(libro);
+    System.out.println(libroAGuardar);
+    Optional<Libro> libroExiste = repositoryLibros.findByTitulo(libroAGuardar.getTitulo());
+    if (libroExiste.isPresent()) {
+      System.out.println("\nEl libro ya esta registrado\n");
+    } else {
+      System.out.println("libro no encontrado en nuestra base de datos");
+      System.out.println("Desea guardar el libro en nuestra base de datos?");
+      var opcionCarga = teclado.nextInt();
+      switch (opcionCarga) {
+        case 1:
+          repositoryLibros.save(libroAGuardar);
+          System.out.println("Libro guardado correctamente");
+          break;
+        case 2:
+          System.out.println("El libro no se guardara");
+          break;
+        default:
+          System.out.println("Opcion invalida");
       }
     }
   }
 }
-
-/*  private void buscarLibroPorAutor() {
-  }
-
-  private void listarLibrosBuscados() {
-    List<Libro> libros = repositoryLibros.findAll();
-    System.out.println("La lista de libros guardados hasta ahora es la siguiente: ");
-
-    libros.stream()
-          .sorted(Comparator.comparing(Libro::getId))
-          .forEach(System.out::println);
-
-  }
-}*/
-
-

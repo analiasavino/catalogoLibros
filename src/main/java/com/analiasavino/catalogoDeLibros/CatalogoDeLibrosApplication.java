@@ -13,15 +13,15 @@ public class CatalogoDeLibrosApplication implements CommandLineRunner {
 	@Autowired
 	private LibroRepository repositoryLibros;
 
-  public CatalogoDeLibrosApplication() {
-  }
+	public CatalogoDeLibrosApplication() {
+	}
 
-  public static void main(String[] args) {
+	public static void main(String[] args) {
 		SpringApplication.run(CatalogoDeLibrosApplication.class, args);
 	}
 
-  @Override
-	public void run(String ...args)throws Exception{
+	@Override
+		public void run(String... args) throws Exception {
 		Main main = new Main(repositoryLibros);
 		main.muestraElMenu();
 	}

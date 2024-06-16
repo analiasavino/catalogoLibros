@@ -14,7 +14,9 @@ public record DatosLibros (
 {
   @Override
   public String toString() {
-    return "\n Datos del libro solicitado:" + "\n" +
+    return
+    "\n ************************************************************************************\n"+
+          "Datos del libro solicitado:" + "\n" +
                "Titulo: '" + titulo + '\'' + "\n" +
                "Autor: " + autor + "\n" +
                "Idiomas disponibles: " + idiomas + "\n"+

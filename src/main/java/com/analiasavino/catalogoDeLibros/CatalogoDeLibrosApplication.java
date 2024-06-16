@@ -10,10 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CatalogoDeLibrosApplication implements CommandLineRunner {
 
-	@Autowired
+	@Autowired //le indica a spring que quiero que le haga una inyeccion
+
 	private LibroRepository repository;
-  public CatalogoDeLibrosApplication() {
-  }
 
   public static void main(String[] args) {
 		SpringApplication.run(CatalogoDeLibrosApplication.class, args);

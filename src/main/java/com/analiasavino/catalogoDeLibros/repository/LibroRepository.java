@@ -11,14 +11,12 @@ import org.springframework.data.repository.query.Param;
 
 public interface LibroRepository extends JpaRepository<Libro, Long> {
 
-  @Query("SELECT l FROM Libro l JOIN FETCH l.idioma WHERE l.id = :id")
-  Libro findByIdWithIdioma(@Param("id") Long id);
+ Optional<Libro>findByTitulo(String titulo);
+ List<Libro> findByIdioma(Idioma idioma);
 
-  List<Libro> findByIdioma(Idioma idioma);
-  @Query("SELECT l FROM Libro l JOIN FETCH l.idioma")
-  List<Libro> findAllWithIdioma();
 
-  }
+
+}
 
 
 

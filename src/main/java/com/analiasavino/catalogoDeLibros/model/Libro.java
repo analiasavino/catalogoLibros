@@ -16,11 +16,8 @@ public class Libro {
   @ManyToOne(cascade = CascadeType.PERSIST)
   @JoinColumn(name = "autor_id")
   private Autor autor;
-  @ElementCollection(targetClass = Idioma.class)
   @Enumerated(EnumType.STRING)
-  @CollectionTable(name = "libro_idiomas", joinColumns = @JoinColumn(name = "libro_id"))
-  @Column(name = "idioma")
-  private List<String> idioma;
+  private Idioma idioma;
   private Integer numeroDeDescargas;
 
   //Constructor predeterminado.
@@ -31,7 +28,7 @@ public class Libro {
   public Libro(DatosLibros datosLibros){
     this.titulo = datosLibros.titulo();
     this.autor = new Autor();
-    this.idioma = datosLibros.idioma();
+    this.idioma = Idioma.fromEspanol(datosLibros.idioma().toString().split(",")[0].trim());
     this.numeroDeDescargas = datosLibros.numeroDeDescargas();
 
 }
@@ -59,13 +56,11 @@ public class Libro {
 
   //public List<DatosAutor> getAutor() {    return autor;}
 
- //public void setAutor(List<DatosAutor> autor) {    this.autor = autor;}
+  public void setAutor(List<DatosAutor> autor) {    this.autor = autor;}
 
-  public List<String> getIdiomas() { return idioma;  }
+  public Idioma getIdioma() { return idioma; }
 
-  public void setIdiomas(List<String> idiomas) {
-    this.idioma = idioma;
-  }
+  public void setIdioma(Idioma idioma) { this.idioma = idioma; }
 
   public Integer getNumeroDeDescargas() {
     return numeroDeDescargas;

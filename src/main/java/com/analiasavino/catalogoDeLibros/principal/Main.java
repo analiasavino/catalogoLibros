@@ -1,12 +1,9 @@
 package com.analiasavino.catalogoDeLibros.principal;
 
-import com.analiasavino.catalogoDeLibros.model.Datos;
-import com.analiasavino.catalogoDeLibros.model.DatosLibros;
-import com.analiasavino.catalogoDeLibros.model.Libro;
+import com.analiasavino.catalogoDeLibros.model.*;
 import com.analiasavino.catalogoDeLibros.repository.LibroRepository;
 import com.analiasavino.catalogoDeLibros.services.ConsumoApi;
 import com.analiasavino.catalogoDeLibros.services.ConvierteDatos;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.Optional;
@@ -22,7 +19,6 @@ public class Main {
   private ConvierteDatos conversor = new ConvierteDatos();
   private Scanner teclado = new Scanner(System.in);
   private List<Datos> datosLibros =new ArrayList<>();
-  @Autowired
   private LibroRepository repository;
   Libro libro = new Libro();
   private com.analiasavino.catalogoDeLibros.model.Idioma Idioma;
@@ -45,14 +41,14 @@ public class Main {
       //en funcion de la opcion elejida se ejecuta el swithc
       switch (opcion) {
         case 1:
-          buscarLibro();
-          //salvarLibro(libro);
+          buscarInfo();
+          salvarLibro();
           break;
         case 2:
           //buscarLibroPorAutor();
           break;
         case 3:
-          listarLibrosBuscados();
+          //listarLibrosBuscados();
           break;
         case 4:
           System.out.println("caso 4");
@@ -63,7 +59,7 @@ public class Main {
         case 6:
           System.out.println("Por favor ingrese el idioma por el cual desea realizar su busqueda:");
           System.out.println(getMenuIdiomas());
-          listarLibrosPorIdiomas();
+          //listarLibrosPorIdiomas();
           break;
         case 7:
           System.out.println("Saliendo del sistema");
@@ -75,7 +71,7 @@ public class Main {
   }
 
   //Metodos
-  private Libro buscarLibro() {
+  private Datos buscarInfo() {
     System.out.println("Por favor ingrese el nombre del libro que desee buscar:");
       var tituloLibro = teclado.nextLine();
       var json = consumoApi.obtenerDatos(URL_BASE + "?search=" + tituloLibro.replace(" ", "+"));
@@ -83,27 +79,24 @@ public class Main {
       Optional<DatosLibros> libroBuscado = datosBusqueda.resultados().stream()
             .filter(l -> l.titulo().toUpperCase().contains(tituloLibro.toUpperCase()))
             .findFirst();
-
       if (libroBuscado.isPresent()) {
         System.out.println(libroBuscado.get());
-
-
       } else {
-        System.out.println("Libro no encontrado");
+        System.out.println("Libro no encontrado.");
       }
-
-      return libro;
+      return datosBusqueda;
   }
 
- /* public void salvarLibro(Libro libro) {
-    Optional<Libro> libroExistente = Optional.ofNullable(libro);
-    if (libroExistente.isPresent()){
-      System.out.println("\nEl libro ya esta registrado\n");
-
-    } else {
-      // Insertar el nuevo registro
-      repository.save(libro);
+   private void salvarLibro() {
+     Optional<Libro> optionalLibro = repository.findByTitulo(String titulo);
+     if (optionalLibro.isPresent()) {
+       Libro libro = optionalLibro.get();
+       System.out.println("El libro ya se encuentra registrado");
+     } else {
+       repository.save(libro);
+     }
     }
+
   }
 
  /* private void buscarLibroPorAutor() {
@@ -127,7 +120,7 @@ public class Main {
     return datosBusqueda;
   }*/
 
-  private void listarLibrosBuscados() {
+/*  private void listarLibrosBuscados() {
     List<Libro> libros = repository.findAll();
     System.out.println("La lista de libros guardados hasta ahora es la siguiente: ");
 
@@ -143,10 +136,10 @@ public class Main {
     var idiomaIngresado = teclado.nextLine();
     var idioma = Idioma.fromEspanol(idiomaIngresado);
     List<Libro> librosPorIdioma= repository.findByIdioma(idioma);
-    System.out.println("Los libros en " + idiomaIngresado + "son los siguentes");
+    System.out.println("Los libros en " + idioma + "son los siguentes");
     librosPorIdioma.forEach(System.out::println);
   }
 
-}
+}*/
 
 

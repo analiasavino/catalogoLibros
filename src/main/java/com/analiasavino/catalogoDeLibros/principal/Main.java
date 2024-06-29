@@ -22,6 +22,7 @@ public class Main {
   private ConvierteDatos conversor = new ConvierteDatos();
   private Scanner teclado = new Scanner(System.in);
   private List<Datos> datosLibros = new ArrayList<>();
+  private Libro libro = new Libro();
   @Autowired
   private LibroRepository repositoryLibros;
 
@@ -32,11 +33,10 @@ public class Main {
   //metodo que me permite mostrar el menu
 
   public void muestraElMenu(){
-    System.out.println("Bienvenido al catalogo de libros de Analia");
+    System.out.println("\n Bienvenido al catalogo de libros de Analia \n");
     int opcion = -1;
     while (opcion != 7) {
       System.out.println( """
-            \n
             1 - Buscar libros por tíulo.
             2 - Guardar libro en base de datos.
             3 - Lista de libros guardados.
@@ -56,7 +56,7 @@ public class Main {
           guardarLibro();
           break;
         case 3:
-          //listarLibrosBuscados();
+          System.out.println("caso3");
           break;
         case 4:
           System.out.println("caso4");
@@ -78,7 +78,7 @@ public class Main {
 
   //Metodos
 
-  private Datos buscarLibro() {
+  private Libro buscarLibro() {
     System.out.println("Por favor ingrese el nombre del libro que desee buscar");
     var tituloLibro = teclado.nextLine();
     var json = consumoApi.obtenerDatos(URL_BASE + "?search=" + tituloLibro.replace(" ", "+"));
@@ -88,27 +88,27 @@ public class Main {
           .findFirst();
     if (libroBuscado.isPresent()) {
       System.out.println(libroBuscado.get());
+      var libro = libroBuscado.get();
+
     } else {
       System.out.println("Libro no encontrado");
     }
-    return datosBusqueda;
+    return libro;
   }
 
-  private void guardarLibro() {
-    Datos datos = buscarLibro();
-    DatosLibros libro = datos.resultados().getFirst();
-    Libro libroAGuardar = new Libro(libro);
-    System.out.println(libroAGuardar);
-    Optional<Libro> libroExiste = repositoryLibros.findByTitulo(libroAGuardar.getTitulo());
+  private void guardarLibro(){
+
+    Optional<Libro> libroExiste = repositoryLibros.findByTitulo(libro.getTitulo());
     if (libroExiste.isPresent()) {
-      System.out.println("\nEl libro ya esta registrado\n");
+      System.out.println("\nEl libro ya esta registrado en nuestra base de datos.\n");
     } else {
       System.out.println("libro no encontrado en nuestra base de datos");
       System.out.println("Desea guardar el libro en nuestra base de datos?");
+      Scanner scanner= new Scanner(System.in);
       var opcionCarga = teclado.nextInt();
       switch (opcionCarga) {
         case 1:
-          repositoryLibros.save(libroAGuardar);
+          repositoryLibros.save(libro);
           System.out.println("Libro guardado correctamente");
           break;
         case 2:
@@ -117,6 +117,6 @@ public class Main {
         default:
           System.out.println("Opcion invalida");
       }
-    }
   }
+    }
 }

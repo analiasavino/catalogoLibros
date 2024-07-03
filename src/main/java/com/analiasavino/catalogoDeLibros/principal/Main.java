@@ -32,11 +32,11 @@ public class Main {
 
   //metodo que me permite mostrar el menu
 
-  public void muestraElMenu(){
+  public void muestraElMenu() {
     System.out.println("\n Bienvenido al catalogo de libros de Analia \n");
     int opcion = -1;
     while (opcion != 7) {
-      System.out.println( """
+      System.out.println("""
             1 - Buscar libros por tíulo.
             2 - Guardar libro en base de datos.
             3 - Lista de libros guardados.
@@ -53,7 +53,7 @@ public class Main {
           buscarLibro();
           break;
         case 2:
-          guardarLibro();
+         // guardarLibro();
           break;
         case 3:
           System.out.println("caso3");
@@ -78,7 +78,7 @@ public class Main {
 
   //Metodos
 
-  private Libro buscarLibro() {
+  private Optional<DatosLibros> buscarLibro() {
     System.out.println("Por favor ingrese el nombre del libro que desee buscar");
     var tituloLibro = teclado.nextLine();
     var json = consumoApi.obtenerDatos(URL_BASE + "?search=" + tituloLibro.replace(" ", "+"));
@@ -88,35 +88,15 @@ public class Main {
           .findFirst();
     if (libroBuscado.isPresent()) {
       System.out.println(libroBuscado.get());
-      var libro = libroBuscado.get();
 
     } else {
       System.out.println("Libro no encontrado");
     }
-    return libro;
+    return libroBuscado;
   }
 
-  private void guardarLibro(){
 
-    Optional<Libro> libroExiste = repositoryLibros.findByTitulo(libro.getTitulo());
-    if (libroExiste.isPresent()) {
-      System.out.println("\nEl libro ya esta registrado en nuestra base de datos.\n");
-    } else {
-      System.out.println("libro no encontrado en nuestra base de datos");
-      System.out.println("Desea guardar el libro en nuestra base de datos?");
-      Scanner scanner= new Scanner(System.in);
-      var opcionCarga = teclado.nextInt();
-      switch (opcionCarga) {
-        case 1:
-          repositoryLibros.save(libro);
-          System.out.println("Libro guardado correctamente");
-          break;
-        case 2:
-          System.out.println("El libro no se guardara");
-          break;
-        default:
-          System.out.println("Opcion invalida");
-      }
+
   }
-    }
-}
+
+

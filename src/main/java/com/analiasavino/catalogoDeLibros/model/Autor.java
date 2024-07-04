@@ -3,6 +3,7 @@ package com.analiasavino.catalogoDeLibros.model;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Entity
@@ -14,8 +15,8 @@ public class Autor {
   private Long Id;
   @Column(unique = true)
   private String nombre;
-  private String fechaDeNacimiento;
-  private String fechaDeFallecimiento;
+  private Integer fechaDeNacimiento;
+  private Integer fechaDeFallecimiento;
   @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL)
   private List<Libro> libro;
 
@@ -24,9 +25,9 @@ public class Autor {
   //constructor
 
   public Autor(DatosAutor datosAutor) {
-    this.nombre = nombre;
-    this.fechaDeNacimiento = fechaDeNacimiento;
-    this.fechaDeFallecimiento = fechaDeFallecimiento;
+    this.nombre = datosAutor.nombre();
+    this.fechaDeNacimiento = datosAutor.fechaDeNacimiento();
+    this.fechaDeFallecimiento = datosAutor.fechaDeFallecimiento();
   }
 
   //getters and setters
@@ -39,19 +40,19 @@ public class Autor {
     this.nombre = nombre;
   }
 
-  public String getFechaDeNacimiento() {
+  public Integer getFechaDeNacimiento() {
     return fechaDeNacimiento;
   }
 
-  public void setFechaDeNacimiento(String fechaDeNacimiento) {
+  public void setFechaDeNacimiento(Integer fechaDeNacimiento) {
     this.fechaDeNacimiento = fechaDeNacimiento;
   }
 
-  public String getFechaDeFallecimiento() {
+  public Integer getFechaDeFallecimiento() {
     return fechaDeFallecimiento;
   }
 
-  public void setFechaDeFallecimiento(String fechaDeFallecimiento) {
+  public void setFechaDeFallecimiento(Integer fechaDeFallecimiento) {
     this.fechaDeFallecimiento = fechaDeFallecimiento;
   }
   public List<Libro> getLibros() {

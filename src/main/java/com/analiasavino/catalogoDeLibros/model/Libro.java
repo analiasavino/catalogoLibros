@@ -15,7 +15,7 @@ public class Libro {
   @ManyToOne()
   @JoinColumn(name ="autor_id")
   private Autor autor;
-  private List<String> idiomas;
+  private List<String> idioma;
   private Integer numeroDeDescargas;
 
   //Constructor predeterminado.
@@ -25,7 +25,7 @@ public class Libro {
 
   public Libro(DatosLibros datosLibros){
     this.titulo = datosLibros.titulo();
-    this.idiomas = datosLibros.idiomas();
+    this.idioma = datosLibros.idiomas();
     this.numeroDeDescargas = datosLibros.numeroDeDescargas();
 
 }
@@ -45,13 +45,13 @@ public class Libro {
 
   public void setTitulo(String titulo) { this.titulo = titulo;  }
 
-  //public List<DatosAutor> getAutor() { return autor;}
+  public Autor getAutor() { return autor;}
 
- //public void setAutor(List<DatosAutor> autor) { this.autor = autor;}
+  public void setAutor(Autor autor) { this.autor = autor;}
 
-  public List<String> getIdiomas() { return idiomas;  }
+  public List<String> getIdiomas() { return idioma;  }
 
-  public void setIdiomas(List<String> idiomas) {this.idiomas = idiomas; }
+  public void setIdiomas(List<String> idiomas) {this.idioma = idiomas; }
 
   public Integer getNumeroDeDescargas() {return numeroDeDescargas;  }
 
@@ -59,14 +59,15 @@ public class Libro {
 
   //metodo toString
 
-
   @Override
   public String toString() {
     return "Libro guardado: " +
            "Id: " + Id +
            ", titulo: " + titulo + '\'' +
            ", autor: " + autor +
-           ", idiomas: " + idiomas +
+           ", idiomas: " + idioma +
            ", numeroDeDescargas: " + numeroDeDescargas;
   }
-}
+
+  }
+

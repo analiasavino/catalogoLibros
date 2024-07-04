@@ -6,7 +6,7 @@ import java.util.List;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record DatosLibros (
+public record   DatosLibros (
       @JsonAlias("title") String titulo,
       @JsonAlias("authors") List<DatosAutor> autor,
       @JsonAlias("languages") List<String> idiomas,
@@ -14,7 +14,10 @@ public record DatosLibros (
 {
   @Override
   public String toString() {
-    return "\n Datos del libro solicitado:" + "\n" +
+    return
+    "\n " +
+    "*************************************************************************************\n"+
+          "Datos del libro solicitado:" + "\n" +
                "Titulo: '" + titulo + '\'' + "\n" +
                "Autor: " + autor + "\n" +
                "Idiomas disponibles: " + idiomas + "\n"+

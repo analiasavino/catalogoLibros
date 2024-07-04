@@ -1,6 +1,7 @@
 package com.analiasavino.catalogoDeLibros;
 
 import com.analiasavino.catalogoDeLibros.principal.Main;
+import com.analiasavino.catalogoDeLibros.repository.AutorRepository;
 import com.analiasavino.catalogoDeLibros.repository.LibroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -13,16 +14,19 @@ public class CatalogoDeLibrosApplication implements CommandLineRunner {
 	@Autowired
 	private LibroRepository repositoryLibros;
 
-  public CatalogoDeLibrosApplication() {
-  }
+	@Autowired
+	private AutorRepository repositoryAutores;
 
-  public static void main(String[] args) {
+	public CatalogoDeLibrosApplication() {
+	}
+
+	public static void main(String[] args) {
 		SpringApplication.run(CatalogoDeLibrosApplication.class, args);
 	}
 
-  @Override
-	public void run(String ...args)throws Exception{
-		Main main = new Main(repositoryLibros);
+	@Override
+		public void run(String... args) throws Exception {
+		Main main = new Main(repositoryLibros, repositoryAutores);
 		main.muestraElMenu();
 	}
 }

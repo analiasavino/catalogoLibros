@@ -8,8 +8,8 @@ import jakarta.persistence.Transient;
 
 public record DatosAutor(
       @JsonAlias("name") String nombre,
-      @JsonAlias("birth_year") String fechaDeNacimiento,
-      @JsonAlias("death_year") String fechaDeFallecimiento
+      @JsonAlias("birth_year") Integer fechaDeNacimiento,
+      @JsonAlias("death_year") Integer fechaDeFallecimiento
 
 ) {
 }

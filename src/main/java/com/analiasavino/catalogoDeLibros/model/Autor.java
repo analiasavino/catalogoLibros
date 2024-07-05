@@ -17,7 +17,7 @@ public class Autor {
   private String nombre;
   private Integer fechaDeNacimiento;
   private Integer fechaDeFallecimiento;
-  @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List<Libro> libro;
 
   //constructor predeterminado es requisito para las bases de datos
@@ -65,6 +65,22 @@ public class Autor {
 
   @Override
   public String toString() {
+    StringBuilder librosStr = new StringBuilder();
+    librosStr.append("Libros: ");
+
+    for(int i = 0; i < libro.size() ; i++) {
+      librosStr.append(libro.get(i).getTitulo());
+      if (i < libro.size() - 1 ){
+        librosStr.append(", ");
+      }
+    }
+    return String.format("---------- Autor ----------%nNombre:" +
+          " %s%n%s%nFecha de Nacimiento: %s%nFecha de Deceso:" +
+          " %s%n---------------------------%n",nombre,librosStr.toString(),fechaDeNacimiento,fechaDeFallecimiento);
+  }
+
+ /* @Override
+  public String toString() {
     return "Autor{" +
           "Id=" + Id +
           ", nombre='" + nombre + '\'' +
@@ -72,5 +88,5 @@ public class Autor {
           ", fechaDeFallecimiento='" + fechaDeFallecimiento + '\'' +
           ", libro=" + libro +
           '}';
-  }
+  }*/
 }

@@ -13,9 +13,10 @@ public class Libro {
   @Column(unique = true)
   private String titulo;
   @ManyToOne()
-  @JoinColumn(name ="autor_id")
+  //@JoinColumn(name ="autor_id")
   private Autor autor;
-  private List<String> idioma;
+  @Enumerated(EnumType.STRING)
+  private Idioma idioma;
   private Integer numeroDeDescargas;
 
   //Constructor predeterminado.
@@ -25,7 +26,7 @@ public class Libro {
 
   public Libro(DatosLibros datosLibros){
     this.titulo = datosLibros.titulo();
-    this.idioma = datosLibros.idiomas();
+    this.idioma = Idioma.fromString(datosLibros.idiomas().toString().split(",")[0].trim());
     this.numeroDeDescargas = datosLibros.numeroDeDescargas();
 
 }
@@ -49,9 +50,9 @@ public class Libro {
 
   public void setAutor(Autor autor) { this.autor = autor;}
 
-  public List<String> getIdiomas() { return idioma;  }
+  public Idioma getIdiomas() { return idioma;  }
 
-  public void setIdiomas(List<String> idiomas) {this.idioma = idiomas; }
+  public void setIdiomas(Idioma idiomas) {this.idioma = idiomas; }
 
   public Integer getNumeroDeDescargas() {return numeroDeDescargas;  }
 
@@ -61,13 +62,23 @@ public class Libro {
 
   @Override
   public String toString() {
+    String nombreAutor = (autor != null) ? autor.getNombre() : "Autor desconocido";
+    return String.format("---------- Libro ----------%nTitulo:" +
+          " %s%nAutor: %s%nIdioma: %s%nNumero de Descargar:" +
+          " %d%n---------------------------%n",titulo,nombreAutor,idioma,numeroDeDescargas);
+  }
+
+
+
+  /*@Override
+  public String toString() {
     return "Libro guardado: " +
            "Id: " + Id +
            ", titulo: " + titulo + '\'' +
            ", autor: " + autor +
            ", idiomas: " + idioma +
            ", numeroDeDescargas: " + numeroDeDescargas;
-  }
+  }*/
 
   }
 

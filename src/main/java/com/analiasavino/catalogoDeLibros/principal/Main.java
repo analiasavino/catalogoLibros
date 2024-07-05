@@ -44,11 +44,11 @@ public class Main {
     while (opcion != 7) {
       System.out.println("""
             1 - Buscar libros por tíulo.
-            2 - Guardar libro en base de datos.
-            3 - Lista de libros guardados.
-            4-  Lista de autores registrados.
-            5 - Lista de autores vivos en determinado año.
-            6 - Lista de libros por idioma.
+            2 - Lista de libros guardados.
+            3 - Lista de autores registrados.
+            4-  Lista de autores vivos en determinado año.
+            5 - Lista de libros por idioma.
+            6 - Ranking de los 10 libros mas bajados.
             7 - Salir.
             """);
       opcion = teclado.nextInt();
@@ -65,7 +65,7 @@ public class Main {
           mostrarAutoresRegistrados();
           break;
         case 4:
-          autoresVivosSegunAnio();
+         // autoresVivosSegunAnio();
           break;
         case 5:
           buscarLibroPorIdioma();
@@ -116,7 +116,7 @@ public class Main {
         //para eso primero instancio el objeto DatosAutor con los datos extraidos de la API
         if (!primeraOpcion.autor().isEmpty()) {
           DatosAutor autor = primeraOpcion.autor().getFirst();
-          //creo un nuevo objeto autor con esos datos que extraemos de la api y vemos si esta en el repositorio
+          //creo un nuevo objeto autor con esos datos que extrajimos de la api y vemos si esta en el repositorio
           Autor autor1 = new Autor(autor);
           Optional<Autor> autorOptional = repositoryAutores.findByNombre(autor1.getNombre());
 
@@ -124,10 +124,12 @@ public class Main {
             Autor autorRegistrado = autorOptional.get();
             libro.setAutor(autorRegistrado);
             repositoryLibros.save(libro);
+            System.out.println("El libro no se encontraba en nuestra base de datos y procedimos a guardarlo.");
           } else {
             Autor autorNuevo = repositoryAutores.save(autor1);
             libro.setAutor(autorNuevo);
             repositoryLibros.save(libro);
+            System.out.println("El libro no se encontraba en nuestra base de datos y procedimos a guardarlo.");
           }
         }
       }
@@ -148,14 +150,14 @@ public class Main {
           .forEach(System.out::println);
   }
 
-  private void autoresVivosSegunAnio() {
+ /* private void autoresVivosSegunAnio() {
     System.out.println("Ingresa el año vivo de autor(es) que desea buscar: ");
     var anio = teclado.nextInt();
-    listadoAutores = repositoryAutores.listaAutoresVivosSegunAnio(String.valueOf(anio));
+    listadoAutores = repositoryAutores.findAutoresVivosSegunAnio(anio);
     listadoAutores.stream()
           .forEach(System.out::println);
   }
-
+*/
   private List<Libro> datosBusquedaLenguaje(String idioma){
     var dato = Idioma.fromString(idioma);
     System.out.println("Lenguaje buscado: " + dato);

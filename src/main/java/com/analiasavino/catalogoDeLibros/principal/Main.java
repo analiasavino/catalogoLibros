@@ -7,10 +7,7 @@ import com.analiasavino.catalogoDeLibros.services.ConsumoApi;
 import com.analiasavino.catalogoDeLibros.services.ConvierteDatos;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -65,13 +62,13 @@ public class Main {
           mostrarAutoresRegistrados();
           break;
         case 4:
-         // autoresVivosSegunAnio();
+          autoresVivosSegunAnio();
           break;
         case 5:
           buscarLibroPorIdioma();
           break;
         case 6:
-         // rankingLibros();
+          buscarTopTenLibros();
           break;
         case 7:
           System.out.println("Saliendo del sistema");
@@ -124,17 +121,17 @@ public class Main {
             Autor autorRegistrado = autorOptional.get();
             libro.setAutor(autorRegistrado);
             repositoryLibros.save(libro);
-            System.out.println("El libro no se encontraba en nuestra base de datos y procedimos a guardarlo.");
+            System.out.println("\n El libro no se encontraba en nuestra base de datos y procedimos a guardarlo.\n");
           } else {
             Autor autorNuevo = repositoryAutores.save(autor1);
             libro.setAutor(autorNuevo);
             repositoryLibros.save(libro);
-            System.out.println("El libro no se encontraba en nuestra base de datos y procedimos a guardarlo.");
+            System.out.println("\n El libro no se encontraba en nuestra base de datos y procedimos a guardarlo.\n");
           }
         }
       }
     } else {
-      System.out.println("El libro no fue encontrado en la API.");
+      System.out.println("\n El libro no fue encontrado en la API.\n");
     }
   }
 
@@ -150,14 +147,25 @@ public class Main {
           .forEach(System.out::println);
   }
 
- /* private void autoresVivosSegunAnio() {
-    System.out.println("Ingresa el año vivo de autor(es) que desea buscar: ");
+  private void autoresVivosSegunAnio() {
+    System.out.println("""
+                **********************************************************************************
+                En esta opcion usted podrá elegir un año y le mostraremos aquello/as autore/as que
+                se encontraban vivo/as en dicho año.)
+                ***********************************************************************************
+                """);
+    System.out.println("\n Ingrese el año por el cual desea buscar un autor/a: \n");
     var anio = teclado.nextInt();
     listadoAutores = repositoryAutores.findAutoresVivosSegunAnio(anio);
-    listadoAutores.stream()
-          .forEach(System.out::println);
+    if(!listadoAutores.isEmpty() ) {
+      System.out.println("\n En ese año se encontraban vivos los siguientes autores: \n");
+      listadoAutores.stream()
+            .forEach(System.out::println);
+    }else {
+      System.out.println("\n No contamos con autores vivos para ese año\n");
+    }
   }
-*/
+
   private List<Libro> datosBusquedaLenguaje(String idioma){
     var dato = Idioma.fromString(idioma);
     System.out.println("Lenguaje buscado: " + dato);
@@ -172,8 +180,8 @@ public class Main {
     var opcion = -1;
     while (opcion != 0) {
       var opciones = """
-                    1. en - Ingles
-                    2. es - Español
+                    1. es - Español
+                    2. en - Ingles
                     3. fr - Francés
                     4. pt - Portugués
                     
@@ -188,20 +196,37 @@ public class Main {
       teclado.nextLine();
       switch (opcion) {
         case 1:
-          List<Libro> librosEnIngles = datosBusquedaLenguaje("[en]");
-          librosEnIngles.forEach(System.out::println);
+          List<Libro> librosEnEspanol = datosBusquedaLenguaje("[es]");
+          if(!librosEnEspanol.isEmpty()) {
+            librosEnEspanol.forEach(System.out::println);
+          }else {
+            System.out.println("\n Lo sentimos no contamos con libros en español\n ");
+          }
           break;
         case 2:
-          List<Libro> librosEnEspanol = datosBusquedaLenguaje("[es]");
-          librosEnEspanol.forEach(System.out::println);
+          List<Libro> librosEnIngles = datosBusquedaLenguaje("[en]");
+          if(!librosEnIngles.isEmpty()) {
+          librosEnIngles.forEach(System.out::println);
+          }else {
+            System.out.println("\n Lo sentimos no contamos con libros en Inglés\n");
+          }
           break;
         case 3:
           List<Libro> librosEnFrances = datosBusquedaLenguaje("[fr]");
+          if(!librosEnFrances.isEmpty()) {
           librosEnFrances.forEach(System.out::println);
+          }else {
+            System.out.println("\n Lo sentimos no contamos con libros en Francés\n");
+          }
           break;
         case 4:
           List<Libro> librosEnPortugues = datosBusquedaLenguaje("[pt]");
-          librosEnPortugues.forEach(System.out::println);
+          if(!librosEnPortugues.isEmpty()) {
+            librosEnPortugues.forEach(System.out::println);
+          }
+          else{
+            System.out.println("\n Lo sentimos no contamos con libros en Portugués\n");
+          }
           break;
         case 0:
           return;
@@ -210,4 +235,16 @@ public class Main {
       }
     }
   }
+
+  private void buscarTopTenLibros(){
+    System.out.println("""
+          ************************************************************************************************
+          Esta opción le mostrará una lista ordenada de los 10 libros con mayor número de descargas que se
+          encuentran almacenados en nuestra base de datos.
+          ************************************************************************************************
+          """);
+    List<Libro> top10Libros = repositoryLibros.findTop10ByOrderByNumeroDeDescargasDesc();
+    top10Libros.forEach(System.out::println);
+  }
+
 }

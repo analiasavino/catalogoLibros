@@ -31,7 +31,11 @@ Esta aplicacion fuer realizada con Java, utilizando las facilidades de Spring bo
 
 
 <h2>Instalacion de la aplicación en tu compu</h2>
+
 1 - Clona el repositorio.
+
+    https://github.com/analiasavino/catalogoLibros.git
+
 
 2 - Configura la base de datos PostgreSQL y actualiza las credenciales en el archivo application.properties.
 
